@@ -278,8 +278,8 @@ const showInfo = (message) => {
 .compte-page {
   min-height: 100vh;
   font-family: 'Plus Jakarta Sans', sans-serif;
-  background: #dbeafe;
-  color: #1e40af;
+  background: #1e40af;
+  color: white;
   --blue: #60a5fa;
   --blue-dk: #3b82f6;
   --blue-lt: #93c5fd;
