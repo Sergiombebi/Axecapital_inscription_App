@@ -722,7 +722,7 @@ onUnmounted(() => {
                       class="checkbox-input"
                     />
                     <span class="checkbox-text">
-                      Je certifie que toutes les informations fournies sont exactes et j'accepte les conditions générales d'utilisation d'AXE CAPITAL. *
+                    Les fonds sont bloquer pendant toutes la periode du jeu. *
                     </span>
                   </label>
                   <span v-if="errors.confirmation" class="error-text">{{ errors.confirmation }}</span>
@@ -1102,14 +1102,14 @@ onUnmounted(() => {
 .compte-page {
   min-height: 100vh;
   font-family: 'Plus Jakarta Sans', sans-serif;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  color: #0f172a;
-  --blue: #1a56db;
-  --blue-dk: #1240a8;
-  --blue-lt: #3b82f6;
+  background: #dbeafe;
+  color: #1e40af;
+  --blue: #60a5fa;
+  --blue-dk: #3b82f6;
+  --blue-lt: #93c5fd;
   --blue-pale: #eff6ff;
   --blue-mid: #dbeafe;
-  --dark: #0f172a;
+  --dark: #1e40af;
   --text: #374151;
   --muted: #6b7280;
   --green: #059669;
@@ -1481,19 +1481,41 @@ onUnmounted(() => {
   grid-column: 1 / -1;
 }
 
+/* FORCER TOUS LES LABELS EN BLEU FONCE */
 .form-group label {
   font-weight: 600;
-  color: var(--dark);
+  color: #1e40af !important;
   font-size: 0.9rem;
 }
 
-.form-input {
-  padding: 1rem 1.25rem;
+.mobile-form-group label {
+  font-weight: 600;
+  color: #1e40af !important;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.file-label {
+  color: #1e40af !important;
+}
+
+.checkbox-label {
+  color: #1e40af !important;
+}
+
+.checkbox-text {
+  color: #1e40af !important;
+}
+
+.mobile-form-input {
+  padding: 1rem;
   border: 2px solid #e2e8f0;
   border-radius: 12px;
-  font-size: 1rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background: #f8fafc;
+  font-size: 0.95rem;
+  background: linear-gradient(135deg, #1e40af, #3b82f6, #60a5fa);
+  color: white;
+  transition: all 0.3s ease;
 }
 
 .form-input:focus {
@@ -1502,6 +1524,10 @@ onUnmounted(() => {
   box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
   background: white;
   transform: translateY(-2px);
+}
+
+.form-input::placeholder {
+  color: #94a3b8;
 }
 
 .form-input.error {
@@ -1515,8 +1541,6 @@ onUnmounted(() => {
   font-weight: 500;
   margin-top: 0.25rem;
 }
-
-/* File Upload */
 .file-upload {
   position: relative;
 }
@@ -1536,6 +1560,7 @@ onUnmounted(() => {
   cursor: pointer;
   transition: all 0.3s ease;
   background: #f8fafc;
+  color: #1e40af;
 }
 
 .file-label:hover {
@@ -1616,6 +1641,7 @@ onUnmounted(() => {
   cursor: pointer;
   font-size: 0.95rem;
   line-height: 1.6;
+  color: #1e40af;
 }
 
 .checkbox-input {
@@ -1625,7 +1651,7 @@ onUnmounted(() => {
 }
 
 .checkbox-text {
-  color: var(--text);
+  color: #1e40af;
   flex: 1;
 }
 
@@ -1849,8 +1875,10 @@ onUnmounted(() => {
 
 .mobile-form-group label {
   font-weight: 600;
-  color: var(--dark);
+  color: #1e40af;
   font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  display: block;
 }
 
 .mobile-form-input {
@@ -1864,9 +1892,13 @@ onUnmounted(() => {
 
 .mobile-form-input:focus {
   outline: none;
-  border-color: var(--blue);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-  background: white;
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.3);
+  background: linear-gradient(135deg, #2563eb, #3b82f6, #60a5fa);
+}
+
+.mobile-form-input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .mobile-form-input.error {
@@ -1878,10 +1910,6 @@ onUnmounted(() => {
   color: var(--red);
   font-size: 0.8rem;
   font-weight: 500;
-}
-
-.mobile-file-upload {
-  position: relative;
 }
 
 .mobile-file-input {

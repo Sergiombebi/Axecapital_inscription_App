@@ -339,11 +339,14 @@ onMounted(() => {
 .recapitulatif-page {
   min-height: 100vh;
   font-family: 'Plus Jakarta Sans', sans-serif;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  --blue: #1a56db;
-  --blue-lt: #3b82f6;
+  background: #dbeafe;
+  color: #60a5fa;
+  --blue: #60a5fa;
+  --blue-dk: #3b82f6;
+  --blue-lt: #93c5fd;
   --blue-pale: #eff6ff;
-  --dark: #0f172a;
+  --blue-mid: #dbeafe;
+  --dark: #60a5fa;
   --text: #374151;
   --muted: #6b7280;
 }

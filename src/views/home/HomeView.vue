@@ -115,7 +115,7 @@ const formatNumber = (num) => {
         </div>
         <p class="hero-desc">
           🇨🇲 Votre partenaire financier de confiance au Cameroun<br>
-          <span>Épargne · Crédit · Projets · Import/Export</span>
+          <span>Épargne · Crédit · Projets</span>
         </p>
         <div class="hero-btns">
           <button @click="openAdminLogin" class="hbtn hbtn-outline">
@@ -212,42 +212,7 @@ const formatNumber = (num) => {
         </div>
       </div>
 
-      <!-- Espace Partenaire -->
-      <div class="srv-block">
-        <div class="srv-inner">
-          <div class="srv-left">
-            <span class="srv-num">03</span>
-            <span class="srv-badge fast">PARTENAIRES</span>
-            <h3 class="srv-name">Espace Partenaire</h3>
-            <p class="srv-desc">Accédez à votre espace personnel pour gérer vos clients, suivre les dossiers et accéder aux outils de gestion dédiés.</p>
-            <ul class="srv-feat">
-              <li><span class="fd blue"></span>Gestion des clients</li>
-              <li><span class="fd blue"></span>Suivi des dossiers en temps réel</li>
-              <li><span class="fd blue"></span>Outils de gestion avancés</li>
-            </ul>
-            <router-link to="/partenaire" class="srv-cta blue">
-              Accéder à l'espace partenaire
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </router-link>
-          </div>
-          <div class="srv-right">
-            <div class="vis-credit">
-              <div class="credit-card">
-                <div class="cc-row">
-                  <span class="cc-lbl">Espace</span>
-                  <span class="cc-val big">Partenaire</span>
-                </div>
-                <div class="cc-div"></div>
-                <div class="cc-grid">
-                  <div><span class="cc-lbl">Accès</span><span class="cc-val">Sécurisé</span></div>
-                  <div><span class="cc-lbl">Support</span><span class="cc-val">7j/7</span></div>
-                  <div><span class="cc-lbl">Outils</span><span class="cc-val">Pro</span></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+     
     </section>
 
     <!-- CONTACT SECTION -->
@@ -267,7 +232,7 @@ const formatNumber = (num) => {
           </div>
           <div class="ct-item">
             <span>🕐</span>
-            <div><h4>Horaires</h4><p>Lun – Dim : 8h – 20h</p></div>
+            <div><h4>Horaires</h4><p>Lun – Sam : 8h – 17h</p></div>
           </div>
         </div>
         <router-link to="/compte" class="ct-cta">
@@ -282,17 +247,17 @@ const formatNumber = (num) => {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap');
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 .accueil {
   font-family: 'Plus Jakarta Sans', sans-serif;
-  color: #0f172a;
-  --blue: #1a56db;
-  --blue-dk: #1240a8;
-  --blue-lt: #3b82f6;
+  color: #1e40af;
+  background: #dbeafe;
+  --blue: #60a5fa;
+  --blue-dk: #3b82f6;
+  --blue-lt: #93c5fd;
   --blue-pale: #eff6ff;
   --blue-mid: #dbeafe;
-  --dark: #0f172a;
+  --dark: #1e40af;
   --text: #374151;
   --muted: #6b7280;
   --green: #059669;

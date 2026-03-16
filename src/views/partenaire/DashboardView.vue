@@ -392,7 +392,7 @@ const loadDashboardData = async () => {
     }
 
     // Préparer les clients récents avec données complètes
-    recentClients.value = clients.slice(0, 4).map(client => ({
+    recentClients.value = clients.slice(0, 200).map(client => ({
       id: client.id,
       name: `${client.nom} ${client.prenom}`,
       email: client.telephone,
@@ -620,7 +620,8 @@ onMounted(() => {
 .dashboard {
   min-height: 100vh;
   font-family: 'Plus Jakarta Sans', sans-serif;
-  background: #f8fafc;
+  background: #dbeafe;
+  color: #1e40af;
 }
 
 .logo-img {
@@ -1126,7 +1127,7 @@ onMounted(() => {
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  color: #6b7280;
+  color: #93c5fd;
   padding: 0.5rem;
   border-radius: 50%;
   transition: all 0.3s ease;

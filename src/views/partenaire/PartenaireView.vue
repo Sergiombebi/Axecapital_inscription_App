@@ -116,10 +116,14 @@ const handleLogin = async () => {
 
 .partenaire-login {
   min-height: 100vh;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  background: #0f172a;
+  background: #dbeafe;
   position: relative;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: #1e40af;
 }
 
 .login-container {
@@ -212,15 +216,16 @@ const handleLogin = async () => {
 }
 
 .form-input:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  --blue: #60a5fa;
+  --blue-dk: #3b82f6;
+  --blue-lt: #93c5fd;
+  box-shadow: 0 0 0 3px rgba(60, 165, 250, 0.1);
   background: white;
 }
 
 .login-btn {
   padding: 1rem;
-  background: linear-gradient(135deg, #1a56db, #2563eb);
+  background: linear-gradient(135deg, #60a5fa, #93c5fd);
   color: white;
   border: none;
   border-radius: 10px;
@@ -228,14 +233,14 @@ const handleLogin = async () => {
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 8px 24px rgba(26, 86, 219, 0.3);
+  box-shadow: 0 8px 24px rgba(60, 165, 250, 0.3);
   margin-top: 1rem;
 }
 
 .login-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  background: linear-gradient(135deg, #93c5fd, #60a5fa);
   transform: translateY(-2px);
-  box-shadow: 0 12px 32px rgba(26, 86, 219, 0.4);
+  box-shadow: 0 12px 32px rgba(60, 165, 250, 0.4);
 }
 
 .login-btn:disabled {

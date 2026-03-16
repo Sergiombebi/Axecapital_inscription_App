@@ -278,11 +278,14 @@ const showInfo = (message) => {
 .compte-page {
   min-height: 100vh;
   font-family: 'Plus Jakarta Sans', sans-serif;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  --blue: #1a56db;
-  --blue-lt: #3b82f6;
+  background: #dbeafe;
+  color: #1e40af;
+  --blue: #60a5fa;
+  --blue-dk: #3b82f6;
+  --blue-lt: #93c5fd;
   --blue-pale: #eff6ff;
-  --dark: #0f172a;
+  --blue-mid: #dbeafe;
+  --dark: #1e40af;
   --text: #374151;
   --muted: #6b7280;
   --green: #059669;
@@ -666,23 +669,23 @@ const showInfo = (message) => {
 .form-input {
   width: 100%;
   padding: 1rem 1rem 1rem 3rem;
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid #e2e8f0;
   border-radius: 12px;
   font-size: 1rem;
+  background: white;
+  color: #1e40af;
   transition: all 0.3s ease;
-  background: rgba(255, 255, 255, 0.05);
-  color: white;
 }
 
 .form-input::placeholder {
-  color: rgba(255, 255, 255, 0.5);
+  color: #94a3b8;
 }
 
 .form-input:focus {
   outline: none;
   border-color: var(--blue);
   box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
-  background: rgba(255, 255, 255, 0.08);
+  background: white;
 }
 
 .input-icon {
