@@ -92,9 +92,14 @@
                   {{ getStatusText(client.status) }}
                 </span>
               </div>
-              <button @click="viewClientProfile(client.fullData)" class="view-profile-btn">
-                👁️ Voir profil
-              </button>
+              <div class="client-actions">
+                <button @click="viewClientProfile(client.fullData)" class="view-profile-btn">
+                  👁️ Voir profil
+                </button>
+                <button @click="deleteClient(client.id, client.name)" class="delete-btn">
+                  🗑️ Supprimer
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -235,6 +240,37 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal de confirmation de suppression -->
+    <div v-if="showDeleteModal && clientToDelete" class="modal-overlay" @click="cancelDelete">
+      <div class="modal-content delete-modal" @click.stop>
+        <div class="modal-header">
+          <h3 class="modal-title">⚠️ Confirmation de suppression</h3>
+          <button @click="cancelDelete" class="modal-close">✕</button>
+        </div>
+        
+        <div class="modal-body">
+          <div class="delete-warning">
+            <div class="warning-icon">⚠️</div>
+            <p class="warning-text">
+              Êtes-vous sûr de vouloir supprimer le compte de <strong>{{ clientToDelete.name }}</strong> ?
+            </p>
+            <p class="warning-subtext">
+              Cette action est <strong>irréversible</strong> et toutes les données associées à ce compte seront définitivement perdues.
+            </p>
+          </div>
+          
+          <div class="modal-actions">
+            <button @click="cancelDelete" class="cancel-btn">
+              Annuler
+            </button>
+            <button @click="confirmDelete" class="confirm-delete-btn">
+              🗑️ Supprimer le compte
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -254,6 +290,8 @@ const stats = ref({
 const recentClients = ref([])
 const selectedClient = ref(null)
 const showClientModal = ref(false)
+const showDeleteModal = ref(false)
+const clientToDelete = ref(null)
 const statusChartData = ref([])
 const evolutionChartData = ref([])
 
@@ -487,6 +525,53 @@ const exportToCSV = async () => {
     console.error('Erreur lors de l\'export CSV:', error)
     alert('Erreur lors de l\'exportation des données')
   }
+}
+
+const deleteClient = (clientId, clientName) => {
+  console.log('Tentative de suppression du client:', clientId, clientName)
+  
+  clientToDelete.value = { id: clientId, name: clientName }
+  showDeleteModal.value = true
+}
+
+const confirmDelete = async () => {
+  if (!clientToDelete.value) return
+  
+  console.log('Début de la suppression dans la base de données...')
+  
+  try {
+    const { error } = await supabase
+      .from('clients')
+      .delete()
+      .eq('id', clientToDelete.value.id)
+
+    console.log('Résultat de la suppression:', { error })
+
+    if (error) {
+      console.error('Erreur lors de la suppression du client:', error)
+      alert('Erreur lors de la suppression du compte: ' + error.message)
+      return
+    }
+
+    console.log('Client supprimé avec succès, rechargement des données...')
+    
+    // Recharger les données du dashboard
+    await loadDashboardData()
+    alert('Compte utilisateur supprimé avec succès')
+    
+    // Fermer la modal
+    showDeleteModal.value = false
+    clientToDelete.value = null
+  } catch (error) {
+    console.error('Erreur lors de la suppression du client:', error)
+    alert('Erreur lors de la suppression du compte: ' + error.message)
+  }
+}
+
+const cancelDelete = () => {
+  console.log('Suppression annulée par l\'utilisateur')
+  showDeleteModal.value = false
+  clientToDelete.value = null
 }
 
 const exportToPDF = async () => {
@@ -898,6 +983,12 @@ onMounted(() => {
   font-size: 0.85rem;
 }
 
+.client-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
 .view-profile-btn {
   background: #3b82f6;
   color: white;
@@ -911,6 +1002,22 @@ onMounted(() => {
 
 .view-profile-btn:hover {
   background: #2563eb;
+  transform: translateY(-1px);
+}
+
+.delete-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.delete-btn:hover {
+  background: #dc2626;
   transform: translateY(-1px);
 }
 
@@ -1136,6 +1243,73 @@ onMounted(() => {
 .modal-close:hover {
   background: #f3f4f6;
   color: #0f172a;
+}
+
+/* Modal de suppression */
+.delete-modal {
+  max-width: 500px;
+}
+
+.delete-warning {
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.warning-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.warning-text {
+  font-size: 1.1rem;
+  color: #0f172a;
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+.warning-subtext {
+  color: #6b7280;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.cancel-btn {
+  padding: 0.75rem 2rem;
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cancel-btn:hover {
+  background: #e5e7eb;
+  transform: translateY(-1px);
+}
+
+.confirm-delete-btn {
+  padding: 0.75rem 2rem;
+  background: #dc2626;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.confirm-delete-btn:hover {
+  background: #b91c1c;
+  transform: translateY(-1px);
 }
 
 .modal-body {
