@@ -227,36 +227,51 @@ const clientData = ref({
 // Charger les données du client depuis Supabase
 const loadClientData = async () => {
   try {
-    // Récupérer les données du client connecté depuis sessionStorage
+    // Récupérer l'ID du client connecté depuis sessionStorage
     const storedClient = sessionStorage.getItem('loggedInClient')
     
     if (storedClient) {
-      // Utiliser les données du client connecté
-      const clientData = JSON.parse(storedClient)
-      console.log('Données client récupérées depuis sessionStorage:', clientData)
+      // Parser les données pour récupérer l'ID
+      const parsedClient = JSON.parse(storedClient)
+      const clientId = parsedClient.id
+      
+      console.log('Récupération des données fraîches depuis Supabase pour le client ID:', clientId)
+      
+      // Récupérer les données fraîches depuis la base de données
+      const { data, error } = await supabase
+        .from('clients')
+        .select('*')
+        .eq('id', clientId)
+        .single()
+      
+      if (error) {
+        throw error
+      }
+      
+      console.log('Données fraîches récupérées depuis Supabase:', data)
       
       // Transformer les données pour le formulaire
       clientData.value = {
-        nom: clientData.nom,
-        prenom: clientData.prenom,
-        dateNaissance: clientData.date_naissance,
-        lieuNaissance: clientData.lieu_naissance,
-        sexe: clientData.sexe,
-        numeroCni: clientData.numero_cni,
-        photos: clientData.photos_cni.map(photoName => ({
+        nom: data.nom,
+        prenom: data.prenom,
+        dateNaissance: data.date_naissance,
+        lieuNaissance: data.lieu_naissance,
+        sexe: data.sexe,
+        numeroCni: data.numero_cni,
+        photos: data.photos_cni.map(photoName => ({
           name: photoName,
           url: supabase.storage.from('cni-photos').getPublicUrl(photoName).data.publicUrl
         })),
-        telephone: clientData.telephone,
-        pays: clientData.pays,
-        ville: clientData.ville,
-        quartier: clientData.quartier,
-        lieuDit: clientData.lieu_dit || '',
-        telephoneUrgence: clientData.telephone_urgence,
-        contactUrgenceNom: clientData.contact_urgence_nom,
-        faitLe: clientData.fait_le,
-        faitA: clientData.fait_a,
-        id: clientData.id
+        telephone: data.telephone,
+        pays: data.pays,
+        ville: data.ville,
+        quartier: data.quartier,
+        lieuDit: data.lieu_dit || '',
+        telephoneUrgence: data.telephone_urgence,
+        contactUrgenceNom: data.contact_urgence_nom,
+        faitLe: data.fait_le,
+        faitA: data.fait_a,
+        id: data.id
       }
     } else {
       // Fallback : récupérer le dernier client enregistré (ancien comportement)

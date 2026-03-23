@@ -305,14 +305,29 @@ const formatDate = (dateString) => {
 // Charger les données du client
 onMounted(async () => {
   try {
-    // Récupérer les données du client connecté depuis sessionStorage
+    // Récupérer l'ID du client connecté depuis sessionStorage
     const storedClient = sessionStorage.getItem('loggedInClient')
     
     if (storedClient) {
-      // Utiliser les données du client connecté
-      const clientData = JSON.parse(storedClient)
-      console.log('Données client récupérées depuis sessionStorage (local):', clientData)
-      clientData.value = clientData
+      // Parser les données pour récupérer l'ID
+      const parsedClient = JSON.parse(storedClient)
+      const clientId = parsedClient.id
+      
+      console.log('Récupération des données fraîches depuis Supabase pour le client ID:', clientId)
+      
+      // Récupérer les données fraîches depuis la base de données
+      const { data, error } = await supabase
+        .from('clients')
+        .select('*')
+        .eq('id', clientId)
+        .single()
+      
+      if (error) {
+        throw new Error('Erreur lors du chargement des données')
+      }
+      
+      console.log('Données fraîches récupérées depuis Supabase (local):', data)
+      clientData.value = data
     } else {
       // Fallback : récupérer le dernier client enregistré (ancien comportement)
       console.warn('Aucun client connecté trouvé dans sessionStorage, utilisation du fallback')
