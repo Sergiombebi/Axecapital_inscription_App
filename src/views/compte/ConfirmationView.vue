@@ -261,20 +261,31 @@ const formatDate = (dateString) => {
 // Charger les données du client
 onMounted(async () => {
   try {
-    // Récupérer le dernier client approuvé (pour la démo)
-    const { data, error } = await supabase
-      .from('clients')
-      .select('*')
-      .eq('statut', 'approuve')
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .single()
+    // Récupérer les données du client connecté depuis sessionStorage
+    const storedClient = sessionStorage.getItem('loggedInClient')
     
-    if (error) {
-      throw new Error('Erreur lors du chargement des données')
+    if (storedClient) {
+      // Utiliser les données du client connecté
+      const clientData = JSON.parse(storedClient)
+      console.log('Données client confirmées depuis sessionStorage:', clientData)
+      clientData.value = clientData
+    } else {
+      // Fallback : récupérer le dernier client approuvé (ancien comportement)
+      console.warn('Aucun client connecté trouvé dans sessionStorage, utilisation du fallback')
+      const { data, error } = await supabase
+        .from('clients')
+        .select('*')
+        .eq('statut', 'approuve')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single()
+      
+      if (error) {
+        throw new Error('Erreur lors du chargement des données')
+      }
+      
+      clientData.value = data
     }
-    
-    clientData.value = data
     
   } catch (error) {
     console.error('Erreur:', error)

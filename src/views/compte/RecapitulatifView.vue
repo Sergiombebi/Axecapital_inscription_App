@@ -227,38 +227,72 @@ const clientData = ref({
 // Charger les données du client depuis Supabase
 const loadClientData = async () => {
   try {
-    // Récupérer le dernier client enregistré (ou passer un ID en param)
-    const { data, error } = await supabase
-      .from('clients')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .single()
+    // Récupérer les données du client connecté depuis sessionStorage
+    const storedClient = sessionStorage.getItem('loggedInClient')
     
-    if (error) throw error
-    
-    // Transformer les données pour le formulaire
-    clientData.value = {
-      nom: data.nom,
-      prenom: data.prenom,
-      dateNaissance: data.date_naissance,
-      lieuNaissance: data.lieu_naissance,
-      sexe: data.sexe,
-      numeroCni: data.numero_cni,
-      photos: data.photos_cni.map(photoName => ({
-        name: photoName,
-        url: supabase.storage.from('cni-photos').getPublicUrl(photoName).data.publicUrl
-      })),
-      telephone: data.telephone,
-      pays: data.pays,
-      ville: data.ville,
-      quartier: data.quartier,
-      lieuDit: data.lieu_dit || '',
-      telephoneUrgence: data.telephone_urgence,
-      contactUrgenceNom: data.contact_urgence_nom,
-      faitLe: data.fait_le,
-      faitA: data.fait_a,
-      id: data.id
+    if (storedClient) {
+      // Utiliser les données du client connecté
+      const clientData = JSON.parse(storedClient)
+      console.log('Données client récupérées depuis sessionStorage:', clientData)
+      
+      // Transformer les données pour le formulaire
+      clientData.value = {
+        nom: clientData.nom,
+        prenom: clientData.prenom,
+        dateNaissance: clientData.date_naissance,
+        lieuNaissance: clientData.lieu_naissance,
+        sexe: clientData.sexe,
+        numeroCni: clientData.numero_cni,
+        photos: clientData.photos_cni.map(photoName => ({
+          name: photoName,
+          url: supabase.storage.from('cni-photos').getPublicUrl(photoName).data.publicUrl
+        })),
+        telephone: clientData.telephone,
+        pays: clientData.pays,
+        ville: clientData.ville,
+        quartier: clientData.quartier,
+        lieuDit: clientData.lieu_dit || '',
+        telephoneUrgence: clientData.telephone_urgence,
+        contactUrgenceNom: clientData.contact_urgence_nom,
+        faitLe: clientData.fait_le,
+        faitA: clientData.fait_a,
+        id: clientData.id
+      }
+    } else {
+      // Fallback : récupérer le dernier client enregistré (ancien comportement)
+      console.warn('Aucun client connecté trouvé dans sessionStorage, utilisation du fallback')
+      const { data, error } = await supabase
+        .from('clients')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single()
+      
+      if (error) throw error
+      
+      // Transformer les données pour le formulaire
+      clientData.value = {
+        nom: data.nom,
+        prenom: data.prenom,
+        dateNaissance: data.date_naissance,
+        lieuNaissance: data.lieu_naissance,
+        sexe: data.sexe,
+        numeroCni: data.numero_cni,
+        photos: data.photos_cni.map(photoName => ({
+          name: photoName,
+          url: supabase.storage.from('cni-photos').getPublicUrl(photoName).data.publicUrl
+        })),
+        telephone: data.telephone,
+        pays: data.pays,
+        ville: data.ville,
+        quartier: data.quartier,
+        lieuDit: data.lieu_dit || '',
+        telephoneUrgence: data.telephone_urgence,
+        contactUrgenceNom: data.contact_urgence_nom,
+        faitLe: data.fait_le,
+        faitA: data.fait_a,
+        id: data.id
+      }
     }
   } catch (error) {
     console.error('Erreur chargement données:', error)

@@ -209,49 +209,109 @@ const goBack = () => {
   loginPhone.value = ''
 }
 
+// Validation complète du numéro de téléphone
+const validatePhoneNumber = (phone) => {
+  const cleanedPhone = phone.trim().replace(/\s+/g, '')
+  
+  // Vérifications de base
+  if (!cleanedPhone) {
+    return { valid: false, message: 'Veuillez entrer un numéro de téléphone' }
+  }
+  
+  if (cleanedPhone.length < 9) {
+    return { valid: false, message: 'Le numéro de téléphone est trop court' }
+  }
+  
+  if (cleanedPhone.length > 15) {
+    return { valid: false, message: 'Le numéro de téléphone est trop long' }
+  }
+  
+  // Vérifier que ce sont bien des chiffres (avec + au début optionnel)
+  if (!/^[\+]?[0-9]+$/.test(cleanedPhone)) {
+    return { valid: false, message: 'Le numéro de téléphone n\'est pas valide' }
+  }
+  
+  return { valid: true, normalizedPhone: cleanedPhone }
+}
+
 // Gestion de la connexion
 const handleLogin = async () => {
-  if (!loginPhone.value.trim()) {
-    loginError.value = 'Veuillez entrer votre numéro de téléphone'
+  // Réinitialiser les erreurs
+  loginError.value = ''
+  
+  // Valider le numéro de téléphone
+  const phoneValidation = validatePhoneNumber(loginPhone.value)
+  if (!phoneValidation.valid) {
+    loginError.value = phoneValidation.message
     return
   }
   
+  const normalizedPhone = phoneValidation.normalizedPhone
+  
   loading.value = true
-  loginError.value = ''
   
   try {
-    // Chercher le compte par numéro de téléphone
-    const { data, error } = await supabase
+    console.log('Recherche du client avec le numéro:', normalizedPhone)
+    
+    // Chercher TOUS les comptes avec ce numéro pour vérification
+    const { data: allMatches, error: searchError } = await supabase
       .from('clients')
       .select('*')
-      .eq('telephone', loginPhone.value.trim())
-      .single()
+      .eq('telephone', normalizedPhone)
+      .order('created_at', { ascending: false })
     
-    if (error && error.code !== 'PGRST116') {
-      throw error
+    if (searchError) {
+      throw searchError
     }
     
-    if (data) {
-      // Compte trouvé
-      console.log('Compte trouvé:', data)
-      
-      if (data.statut === 'approuve') {
-        // Compte approuvé, rediriger vers confirmation
-        showSuccess('Connexion réussie ! Redirection...')
-        setTimeout(() => {
-          router.push('/compte/confirmation')
-        }, 1500)
-      } else {
-        // Compte en attente, rediriger vers récapitulatif
-        showInfo('Compte en attente de validation')
-        setTimeout(() => {
-          router.push('/compte/recapitulatif')
-        }, 1500)
-      }
-    } else {
-      // Aucun compte trouvé
+    console.log('Résultats de la recherche:', allMatches?.length || 0, 'compte(s) trouvé(s)')
+    
+    if (!allMatches || allMatches.length === 0) {
       loginError.value = 'Ce numéro n\'est associé à aucun compte'
+      return
     }
+    
+    // Validation stricte : comparer chaque numéro caractère par caractère
+    let exactMatch = null
+    for (const client of allMatches) {
+      const storedPhone = client.telephone.trim().replace(/\s+/g, '')
+      const inputPhone = normalizedPhone
+      
+      console.log('Comparaison:')
+      console.log('- Numéro stocké:', storedPhone)
+      console.log('- Numéro saisi:', inputPhone)
+      console.log('- Match exact:', storedPhone === inputPhone)
+      
+      if (storedPhone === inputPhone) {
+        exactMatch = client
+        break
+      }
+    }
+    
+    if (!exactMatch) {
+      loginError.value = 'Aucun compte trouvé avec ce numéro exact'
+      return
+    }
+    
+    // Compte trouvé et validé
+    console.log('Compte validé:', exactMatch)
+    
+    // Stocker les infos dans sessionStorage
+    sessionStorage.setItem('loggedInClient', JSON.stringify(exactMatch))
+    
+    // Rediriger selon le statut
+    if (exactMatch.statut === 'approuve') {
+      showSuccess('Connexion réussie ! Redirection...')
+      setTimeout(() => {
+        router.push('/compte/confirmation')
+      }, 1500)
+    } else {
+      showInfo('Compte en attente de validation')
+      setTimeout(() => {
+        router.push('/compte/recapitulatif')
+      }, 1500)
+    }
+    
   } catch (error) {
     console.error('Erreur connexion:', error)
     loginError.value = 'Erreur lors de la connexion. Veuillez réessayer.'
